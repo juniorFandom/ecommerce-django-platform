@@ -6,7 +6,7 @@ from rest_framework.generics import (DestroyAPIView, GenericAPIView,
                                     ListAPIView, 
                                     DestroyAPIView, 
                                     UpdateAPIView)
-from rest_framework.mixins import (CreateModelMixin, ListModelMixin, UpdateModelMixin, DestroyModelMixin)
+from rest_framework.mixins import (CreateModelMixin, ListModelMixin, UpdateModelMixin, DestroyModelMixin, RetrieveModelMixin)
 from .models import Product
 from .serializer import ProductSerializer
 
@@ -38,4 +38,7 @@ class ProductDeleteAPIView(DestroyModelMixin,
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
+class RetreiveProductAPIView(RetrieveModelMixin, productGenericAPIView):
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
 
