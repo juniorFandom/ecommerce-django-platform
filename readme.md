@@ -257,7 +257,7 @@ Les URLs exactes dépendent de la configuration du projet.
 ### 1. Cloner le dépôt
 
 ```bash
-git clone https://github.com/votre-utilisateur/market-platform.git
+git clone https://github.com/juniorFandom/market-platform.git
 ```
 
 ### 2. Accéder au projet
