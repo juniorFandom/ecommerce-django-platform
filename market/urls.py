@@ -24,9 +24,10 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('product.urls')),
-    path('', include('inventory.urls')),
-    path('', include('mouvement_stock.urls')),
+    path('product/', include('product.urls')),
+    path('inventory/', include('inventory.urls')),
+    path('mouvement_stock/', include('mouvement_stock.urls')),
+    path('category/', include('categorie.urls'))
 ]
 
 urlpatterns += [

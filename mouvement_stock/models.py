@@ -1,6 +1,7 @@
 from django.db import models
 from inventory.models import Inventory
 from django.utils.text import slugify
+import uuid
 
 class MouvementStock(models.Model):
 
@@ -31,7 +32,7 @@ class MouvementStock(models.Model):
         blank=True
     )
 
-    slug = models.SlugField( default='nsduiy89')
+    slug = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)  
 
     def __str__(self):
         return f"{self.type} - {self.quantity}"

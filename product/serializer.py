@@ -4,4 +4,9 @@ from rest_framework import serializers
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'name', 'prix', 'is_active', 'slug']
+        fields = [ 'name', 'prix', 'category']
+        read_only_flields = [
+            'id',
+            'is_active',
+            'slug'
+        ]

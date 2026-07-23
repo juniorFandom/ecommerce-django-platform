@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'product',
     'inventory',
-    'mouvement_stock'
+    'mouvement_stock',
+    'categorie'
 ]
 
 REST_FRAMEWORK = {

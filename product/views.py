@@ -10,6 +10,7 @@ from rest_framework.mixins import (CreateModelMixin, ListModelMixin, UpdateModel
 from .models import Product
 from .serializer import ProductSerializer
 
+
 class productGenericAPIView(GenericAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer

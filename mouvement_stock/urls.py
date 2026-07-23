@@ -6,9 +6,9 @@ from .views import (MouvementStockCreateAPIView,
                     MouvementStockRetrieveAPIView,
                     MouvementStockUpdateAPIView)
 urlpatterns = [
-    path('MouvementStock/', MouvementStockListAPIView.as_view(), name="list-mouvementStock"),
-    path('Mouvement/create/', MouvementStockCreateAPIView.as_view(), name="create-mouvementStock"),
-    path('Mouvement/update/<slug:slug>/', MouvementStockUpdateAPIView.as_view(), name="update-mouvementStock"),
-    path('Mouvement/delete/<slug:slug>/', MouvementStockDeleteAPIView.as_view(), name="delete-mouvementStock"),
-    path('Mouvement/detail/<slug:slug>/', MouvementStockRetrieveAPIView.as_view(), name="detail-mouvementStock")
+    path('list/', MouvementStockListAPIView.as_view(), name="list-mouvementStock"),
+    path('create/', MouvementStockCreateAPIView.as_view(), name="create-mouvementStock"),
+    path('update/<slug:slug>/', MouvementStockUpdateAPIView.as_view(), name="update-mouvementStock"),
+    path('delete/<slug:slug>/', MouvementStockDeleteAPIView.as_view(), name="delete-mouvementStock"),
+    path('detail/<slug:slug>/', MouvementStockRetrieveAPIView.as_view(), name="detail-mouvementStock")
 ]

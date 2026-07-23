@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Inventory
 from product.serializer import ProductSerializer
 from product.models import Product
+from .service import create_inventory
 
 
 class InventorySerializer(serializers.ModelSerializer):
@@ -48,3 +49,8 @@ class InventoryCreateSerializer(serializers.ModelSerializer):
             })
 
         return attrs
+
+    def create(self, validated_data):
+    
+        return create_inventory( validated_data)
+    
