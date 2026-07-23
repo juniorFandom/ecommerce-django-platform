@@ -36,7 +36,7 @@ class InventorySerializer(serializers.ModelSerializer):
 class InventoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
-        fields = ['product','quantity','minimum_stock']
+        fields = ['product','minimum_stock']
 
 
     def validate(self, attrs):
@@ -49,8 +49,3 @@ class InventoryCreateSerializer(serializers.ModelSerializer):
             })
 
         return attrs
-
-    def create(self, validated_data):
-    
-        return create_inventory( validated_data)
-    

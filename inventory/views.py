@@ -10,12 +10,12 @@ class InventoryGenericAPIView(GenericAPIView):
     lookup_field = 'slug'
 
 
-class InventoryCreateAPIView(CreateModelMixin,
-                            InventoryGenericAPIView):
-    serializer_class = InventoryCreateSerializer
+# class InventoryCreateAPIView(CreateModelMixin,
+#                             InventoryGenericAPIView):
+#     serializer_class = InventoryCreateSerializer
     
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+#     def post(self, request, *args, **kwargs):
+#         return self.create(request, *args, **kwargs)
 
     
 
@@ -33,9 +33,9 @@ class RetreiveInventoryAPIView(RetrieveModelMixin, InventoryGenericAPIView):
 
 
 
-class UpdateInventoryAPIView(UpdateModelMixin, InventoryGenericAPIView):
-    def post(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+# class UpdateInventoryAPIView(UpdateModelMixin, InventoryGenericAPIView):
+#     def post(self, request, *args, **kwargs):
+#         return self.update(request, *args, **kwargs)
 
 
 

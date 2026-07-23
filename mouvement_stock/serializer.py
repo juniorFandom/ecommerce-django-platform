@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import MouvementStock
-from .utils import create_stock_movement
-
+from .service import create_stock_movement
+from inventory.serializer import InventorySerializer
 
 class MouvementStockSerializer(serializers.ModelSerializer):
 
@@ -11,17 +11,19 @@ class MouvementStockSerializer(serializers.ModelSerializer):
             'inventory',
             'type',
             'quantity',
-            'motif'
+            'motif',
+            'slug'
         ]
+        read_only_fields =['slug']
 
     def validate_quantity(self, value):
+
         if value <= 0:
             raise serializers.ValidationError(
                 "La quantité doit être supérieure à zéro."
             )
 
         return value
-
 
     def create(self, validated_data):
 
@@ -33,8 +35,8 @@ class MouvementStockSerializer(serializers.ModelSerializer):
         )
 
 
-class MouvementStockDetailSerializer(serializers.Serializer):
-    inventory = serializers.SerializerMethodField(read_only=True)
+class MouvementStockDetailSerializer(serializers.ModelSerializer):
+    inventory = InventorySerializer()
     class Meta:
         model = MouvementStock
         fields = '__all__'

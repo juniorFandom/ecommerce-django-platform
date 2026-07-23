@@ -4,7 +4,7 @@ from .models import Inventory
 
 
 @transaction.atomic
-def create_inventory(validated_data):
+def create_inventory(**validated_data):
 
     inventory = Inventory.objects.create(
         **validated_data
