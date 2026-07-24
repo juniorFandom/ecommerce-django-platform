@@ -1,6 +1,5 @@
 from django.db import transaction
 from rest_framework.exceptions import ValidationError
-
 from inventory.models import Inventory
 from .models import MouvementStock
 

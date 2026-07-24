@@ -28,7 +28,8 @@ urlpatterns = [
     path('inventory/', include('inventory.urls')),
     path('mouvement_stock/', include('mouvement_stock.urls')),
     path('category/', include('categorie.urls')),
-    path('users/',include('users.urls'))
+    path('users/',include('users.urls')),
+    path('auth/',include('authentication.urls')),
 ]
 
 urlpatterns += [

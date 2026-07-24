@@ -5,9 +5,23 @@ import uuid
 
 class User(AbstractUser):
 
+    ROLE_CHOICES = [
+        ('ADMIN', 'Administrateur'),
+        ('GESTIONNAIRE', 'Gestionnaire'),
+        ('VENDEUR', 'Vendeur'),
+        ('CLIENT', 'Client'),
+    ]
+
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        default='CLIENT'
+    )
     email = models.EmailField(
         unique=True
     )
+
+    
 
     slug = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)  
 
