@@ -14,7 +14,7 @@ from drf_spectacular.utils import extend_schema
 class UserGenericAPIView(GenericAPIView):
     serializer_class =  UserSerializer
     lookup_field = 'slug'
-    query = User.objects.all()
+    queryset = User.objects.all()
 
 class UserCreateAPIView(UserGenericAPIView, CreateModelMixin):
     def post(self,request, *args, **kwargs):

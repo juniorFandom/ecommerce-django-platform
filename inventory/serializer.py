@@ -36,16 +36,13 @@ class InventorySerializer(serializers.ModelSerializer):
 class InventoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
-        fields = ['product','minimum_stock','quantite']
+        fields = '__all__'
+        read_only_fields = [
+            'id',
+            'reserved_quantity',
+            'last_updated',
+            'slug'
+        ]
 
-
-    def validate(self, attrs):
-        quantity = attrs.get('quantity')
-        minimum_stock = attrs.get('minimum_stock')
-
-        if quantity <= minimum_stock:
-            raise serializers.ValidationError({
-                'quantity': 'La quantité doit être supérieure à la quantité minimum.'
-            })
-
-        return attrs
+    def create(self, validated_data):
+        return create_inventory(**validated_data)

@@ -8,9 +8,7 @@ class Product(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.PROTECT,
-        related_name='products',
-        blank= True, 
-        null = True
+        related_name='products'
     )
     name = models.CharField(max_length=100)
     prix = models.DecimalField(max_digits=10, decimal_places=2)

@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import ListInventoryAPIView, DestroyInventoryAPIView
+from .views import ListInventoryAPIView, DestroyInventoryAPIView, InventoryCreateAPIView
 urlpatterns = [
     path('list/',ListInventoryAPIView.as_view(), name='inventory-list'),
-    # path('create/',InventoryCreateAPIView.as_view(), name='inventory-create'),
+    path('create/',InventoryCreateAPIView.as_view(), name='inventory-create'),
     # path('update/<slug:slug>',UpdateInventoryAPIView.as_view(), name='inventory-update'),
-    path('delete/<slug:slug>',DestroyInventoryAPIView.as_view(), name='inventory-delete')
+    path('delete/<slug:slug>/',DestroyInventoryAPIView.as_view(), name='inventory-delete')
 ]

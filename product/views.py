@@ -18,8 +18,10 @@ class productGenericAPIView(GenericAPIView):
 
 class ProductCreateAPIView(CreateModelMixin,
                             productGenericAPIView):
+                        
     def post(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
+        print("dans la methode de creation")
+        return self.create(request, *args, **kwargs)
 
 class ProductListAPIView(ListModelMixin,
                         productGenericAPIView):
