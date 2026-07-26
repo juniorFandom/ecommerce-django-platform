@@ -1,8 +1,25 @@
 from django.test import TestCase
 from django.urls import reverse
+from categorie.models import Category
+from .models import Product
 
 
 class ProductAPITestCase(TestCase):
+
+    def setUp(self):
+        self.categorie = Category.objects.create(name='ma_cat')
+        self.categorie2 = Category.objects.create(name='ma')
+        self.product = Product.objects.create(category=self.categorie, name='mon_produit',prix=1200)
+        
+
+    def test_is_correct_instance(self):
+        self.assertIsInstance( self.product, Product)
+    
+    def test_if_exist(self):
+
+        prod = Product.objects.get(pk=1)
+        self.assertTrue(prod)
+
 
     def test_product_list(self):
         url = reverse('product-list')
@@ -17,6 +34,7 @@ class ProductAPITestCase(TestCase):
         url = reverse('product-create')
 
         data = {
+            'category':1,
             "name": "Test Product",
             "prix": 9.99,
             "is_active": True
@@ -37,6 +55,7 @@ class ProductAPITestCase(TestCase):
         create_url = reverse('product-create')
 
         create_data = {
+            'category':1,
             "name": "Product to Update",
             "prix": 19.99,
             "is_active": True
@@ -58,6 +77,7 @@ class ProductAPITestCase(TestCase):
         )
 
         update_data = {
+            'category':2,
             "name": "Updated Product",
             "prix": 29.99,
             "is_active": False
@@ -81,6 +101,7 @@ class ProductAPITestCase(TestCase):
         create_url = reverse('product-create')
 
         create_data = {
+            'category':1,
             "name": "Product to Delete",
             "prix": 15.99,
             "is_active": True
