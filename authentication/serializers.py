@@ -3,7 +3,7 @@ from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer,
     TokenRefreshSerializer
 )
-
+from users.models import User
 
 class UserStatusMixin:
 
@@ -16,7 +16,6 @@ class UserStatusMixin:
 
 
 class CustomTokenObtainPairSerializer(
-    UserStatusMixin,
     TokenObtainPairSerializer
 ):
 
@@ -24,13 +23,12 @@ class CustomTokenObtainPairSerializer(
 
         data = super().validate(attrs)
 
-        self.check_user_active(self.user)
-
         data['user'] = {
             'id': self.user.id,
             'username': self.user.username,
             'email': self.user.email,
             'role': self.user.role,
+            'slug': self.user.slug
         }
 
         return data
@@ -49,8 +47,6 @@ class CustomTokenRefreshSerializer(
         )
 
         user_id = refresh.get('user_id')
-
-        from users.models import User
 
         try:
             user = User.objects.get(

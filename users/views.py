@@ -21,6 +21,7 @@ class UserCreateAPIView(UserGenericAPIView, CreateModelMixin):
         return self.create(request, *args, **kwargs)
 
 class UserListAPIView(UserGenericAPIView, ListModelMixin):
+    serializer_class = UserDetailSerializer
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
