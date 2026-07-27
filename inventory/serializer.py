@@ -36,7 +36,7 @@ class InventorySerializer(serializers.ModelSerializer):
 class InventoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
-        fields = '__all__'
+        fields = ['product','quantity','minimum_stock','slug']
         read_only_fields = [
             'id',
             'reserved_quantity',
@@ -45,4 +45,5 @@ class InventoryCreateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
+        print(f'dans la methode de validation de l\inventory {validated_data}')
         return create_inventory(**validated_data)
