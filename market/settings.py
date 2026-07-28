@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -81,6 +81,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'authentication.middleware.AccessTokenBlacklistMiddleware'
 ]
 
 ROOT_URLCONF = 'market.urls'
@@ -100,8 +101,52 @@ TEMPLATES = [
     },
 ]
 
+
+# configuration du serveur de cache Redis 
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379/1',
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#             'PASSWORD': 'VOTRE_MOT_DE_PASSE', 
+#         }
+#     }
+# }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',  # Cache mémoire par défaut
+        'LOCATION': 'unique-snowflake',
+    }
+}
+
+# Essayer d'utiliser Redis si disponible
+try:
+    import django_redis
+    REDIS_ENABLED = os.getenv('REDIS_ENABLED', 'False').lower() == 'true'
+    
+    if REDIS_ENABLED:
+        CACHES['default'] = {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'PASSWORD': os.getenv('REDIS_PASSWORD', ''),
+            }
+        }
+        print("✅ Redis activé")
+    else:
+        print("⚠️ Cache mémoire activé (Redis désactivé)")
+except ImportError:
+    print("⚠️ django_redis non installé - Utilisation du cache mémoire")
+
 WSGI_APPLICATION = 'market.wsgi.application'
 
+# Désactiver l'avertissement de clé de cache trop longue
+import warnings
+from django.core.cache.backends.base import CacheKeyWarning
+warnings.simplefilter("ignore", CacheKeyWarning)
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -155,3 +200,263 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# Créer le dossier logs
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
+# Niveau de log selon l'environnement
+LOG_LEVEL = 'DEBUG' if DEBUG else 'INFO'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    
+    'formatters': {
+        'verbose': {
+            'format': '{asctime} - {levelname} - {name} - {module} - {funcName} - {lineno} - {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{asctime} - {levelname} - {message}',
+            'style': '{',
+        },
+        'json': {
+            'format': '{{"timestamp": "{asctime}", "level": "{levelname}", "module": "{module}", "func": "{funcName}", "message": "{message}"}}',
+            'style': '{',
+        },
+        'security': {
+            'format': '{asctime} - [SECURITY] - {levelname} - {name} - {message}',
+            'style': '{',
+        },
+        'business': {
+            'format': '{asctime} - [BUSINESS] - {levelname} - {name} - User:{user} - Action:{message}',
+            'style': '{',
+        },
+    },
+    
+    'handlers': {
+        # Console
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': LOG_LEVEL,
+            'formatter': 'simple',
+        },
+        
+        # Fichier global
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'app.log'),
+            'maxBytes': 10485760,  # 10 MB
+            'backupCount': 10,
+            'level': 'INFO',
+            'formatter': 'verbose',
+        },
+        
+        # Fichier des erreurs
+        'error_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'errors.log'),
+            'maxBytes': 10485760,
+            'backupCount': 10,
+            'level': 'ERROR',
+            'formatter': 'verbose',
+        },
+        
+        # Sécurité (déconnexions, tentatives de hacking)
+        'security_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'security.log'),
+            'maxBytes': 10485760,
+            'backupCount': 5,
+            'level': 'WARNING',
+            'formatter': 'security',
+        },
+        
+        # Performance (requêtes lentes, etc.)
+        'performance_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'performance.log'),
+            'maxBytes': 10485760,
+            'backupCount': 5,
+            'level': 'INFO',
+            'formatter': 'verbose',
+        },
+        
+        # === Logs par module ===
+        
+        # Authentification
+        'auth_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'authentication.log'),
+            'maxBytes': 10485760,
+            'backupCount': 5,
+            'level': 'INFO',
+            'formatter': 'verbose',
+        },
+        
+        # Utilisateurs
+        'user_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'user.log'),
+            'maxBytes': 10485760,
+            'backupCount': 5,
+            'level': 'INFO',
+            'formatter': 'verbose',
+        },
+        
+        # Produits
+        'product_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'product.log'),
+            'maxBytes': 10485760,
+            'backupCount': 5,
+            'level': 'INFO',
+            'formatter': 'verbose',
+        },
+        
+        # Catégories
+        'categorie_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'categorie.log'),
+            'maxBytes': 10485760,
+            'backupCount': 5,
+            'level': 'INFO',
+            'formatter': 'verbose',
+        },
+        
+        # Inventaire
+        'inventory_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'inventory.log'),
+            'maxBytes': 10485760,
+            'backupCount': 5,
+            'level': 'INFO',
+            'formatter': 'verbose',
+        },
+        
+        # Mouvements de stock
+        'stock_movement_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'stock_movement.log'),
+            'maxBytes': 10485760,
+            'backupCount': 5,
+            'level': 'INFO',
+            'formatter': 'verbose',
+        },
+        
+        # Commandes
+        'order_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'order.log'),
+            'maxBytes': 10485760,
+            'backupCount': 5,
+            'level': 'INFO',
+            'formatter': 'verbose',
+        },
+        
+        # Paiements
+        'payment_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'payment.log'),
+            'maxBytes': 10485760,
+            'backupCount': 5,
+            'level': 'INFO',
+            'formatter': 'verbose',
+        },
+    },
+    
+    'loggers': {
+        # === ROOT LOGGER ===
+        '': {
+            'handlers': ['console', 'file', 'error_file'],
+            'level': LOG_LEVEL,
+            'propagate': False,
+        },
+        
+        # === MODULES SPÉCIFIQUES ===
+        
+        # Authentication
+        'apps.authentication': {
+            'handlers': ['console', 'auth_file', 'error_file', 'security_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        
+        # User
+        'apps.users': {
+            'handlers': ['console', 'user_file', 'error_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        
+        # Product
+        'apps.product': {
+            'handlers': ['console', 'product_file', 'error_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        
+        # Categorie
+        'apps.categorie': {
+            'handlers': ['console', 'categorie_file', 'error_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        
+        # Inventory
+        'apps.inventory': {
+            'handlers': ['console', 'inventory_file', 'error_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        
+        # MouvementStock
+        'apps.mouvement_Stock': {
+            'handlers': ['console', 'stock_movement_file', 'error_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        
+        # # Commande
+        # 'apps.commande': {
+        #     'handlers': ['console', 'order_file', 'error_file'],
+        #     'level': 'INFO',
+        #     'propagate': False,
+        # },
+        
+        # # Paiement
+        # 'apps.paiement': {
+        #     'handlers': ['console', 'payment_file', 'error_file', 'security_file'],
+        #     'level': 'INFO',
+        #     'propagate': False,
+        # },
+        
+        # Core (middleware, utils)
+        'apps.core': {
+            'handlers': ['console', 'file', 'performance_file', 'error_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        
+        # === DJANGO ===
+        'django': {
+            'handlers': ['console', 'file', 'error_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console', 'error_file', 'performance_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.db.backends': {
+            'handlers': ['console', 'file'],
+            'level': 'WARNING',  # Mettre DEBUG pour voir les requêtes SQL
+            'propagate': False,
+        },
+    },
+}

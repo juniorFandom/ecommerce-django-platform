@@ -22,7 +22,7 @@ class CustomTokenObtainPairSerializer(
     def validate(self, attrs):
 
         data = super().validate(attrs)
-
+        print("dans le serializer d'obtention de la paire de token ")
         data['user'] = {
             'id': self.user.id,
             'username': self.user.username,
@@ -40,6 +40,8 @@ class CustomTokenRefreshSerializer(
 ):
 
     def validate(self, attrs):
+
+        print("dans le serializer de refresh du token ")
 
 
         refresh = self.token_class(
