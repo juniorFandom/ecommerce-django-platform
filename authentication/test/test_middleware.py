@@ -8,7 +8,6 @@ from authentication.middleware import AccessTokenBlacklistMiddleware
 from authentication.service.redis_token_service import RedisTokenBlacklistService
 
 
-# 👈 Utiliser get_user_model()
 User = get_user_model()
 
 

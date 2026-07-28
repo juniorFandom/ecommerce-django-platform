@@ -35,9 +35,6 @@ class AccessTokenBlacklistMiddleware:
                         status=status.HTTP_401_UNAUTHORIZED
                     )
                 
-                # Optionnel : Vérifier que le token est valide
-                # (ne pas le faire ici pour éviter de décoder 2 fois)
-                
             except Exception as e:
                 logger.error(f"Erreur lors de la vérification du token: {e}")
                 # On laisse passer et on laisse Django gérer l'erreur

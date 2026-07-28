@@ -6,13 +6,6 @@ from rest_framework_simplejwt.tokens import AccessToken
 # Configurer le logging pour éviter les erreurs d'encodage
 logger = logging.getLogger(__name__)
 
-# Forcer l'encodage UTF-8 pour les logs sur Windows
-import sys
-import io
-if sys.platform == 'win32':
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
-
 
 class RedisTokenBlacklistService:
     """
@@ -129,30 +122,4 @@ class RedisTokenBlacklistService:
             logger.error(f"Erreur lors de la recuperation des tokens: {e}")
             return []
     
-    def get_stats(self) -> dict:
-        """
-        Recupere des statistiques sur la blacklist
-        """
-        try:
-            if self._is_memory_cache:
-                return {
-                    'status': 'memory_cache',
-                    'message': 'Utilisation du cache memoire (pas de Redis)',
-                    'total_blacklisted': 'inconnu',
-                    'warning': 'Les tokens sont perdus au redemarrage'
-                }
-            
-            from django_redis import get_redis_connection
-            redis_client = get_redis_connection("default")
-            
-            pattern = f"{self.key_prefix}*"
-            keys = redis_client.keys(pattern)
-            
-            return {
-                'status': 'redis',
-                'total_blacklisted': len(keys),
-                'keys': keys,
-            }
-        except Exception as e:
-            logger.error(f"Erreur lors de la recuperation des stats: {e}")
-            return {'error': str(e)}
+    

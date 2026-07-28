@@ -124,15 +124,17 @@ CACHES = {
 # Essayer d'utiliser Redis si disponible
 try:
     import django_redis
-    REDIS_ENABLED = os.getenv('REDIS_ENABLED', 'False').lower() == 'true'
+    REDIS_ENABLED = config('REDIS_ENABLED')
+
+    print(f" valeur de la variable d'activation {REDIS_ENABLED}")
     
     if REDIS_ENABLED:
         CACHES['default'] = {
             'BACKEND': 'django_redis.cache.RedisCache',
-            'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+            'LOCATION': config('REDIS_URL'),
             'OPTIONS': {
                 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-                'PASSWORD': os.getenv('REDIS_PASSWORD', ''),
+                'PASSWORD': config('REDIS_PASSWORD'),
             }
         }
         print("✅ Redis activé")
