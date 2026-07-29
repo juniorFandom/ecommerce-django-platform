@@ -5,15 +5,6 @@ from rest_framework_simplejwt.serializers import (
 )
 from users.models import User
 
-class UserStatusMixin:
-
-    def check_user_active(self, user):
-
-        if not user.is_active:
-            raise AuthenticationFailed(
-                "Votre compte est désactivé."
-            )
-
 
 class CustomTokenObtainPairSerializer(
     TokenObtainPairSerializer
@@ -35,7 +26,6 @@ class CustomTokenObtainPairSerializer(
 
 
 class CustomTokenRefreshSerializer(
-    UserStatusMixin,
     TokenRefreshSerializer
 ):
 
@@ -58,9 +48,11 @@ class CustomTokenRefreshSerializer(
             raise AuthenticationFailed(
                 "Utilisateur introuvable."
             )
-
+        if not user.check_user_active:
+            raise AuthenticationFailed(
+                "Votre compte est désactivé."
+            )
         data = super().validate(attrs)
-        self.check_user_active(user)
 
         return data
 

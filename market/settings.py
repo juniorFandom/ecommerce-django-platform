@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'mouvement_stock',
     'categorie',
     'users',
-    'authentication'
+    'authentication',
+    'commande'
 ]
 
 SIMPLE_JWT = {
@@ -125,8 +126,6 @@ CACHES = {
 try:
     import django_redis
     REDIS_ENABLED = config('REDIS_ENABLED')
-
-    print(f" valeur de la variable d'activation {REDIS_ENABLED}")
     
     if REDIS_ENABLED:
         CACHES['default'] = {

@@ -54,11 +54,18 @@ class CustomTokenBlacklistView(TokenBlacklistView):
         return response
 
 class CustomTokenObtainPairView( TokenObtainPairView):
+    '''
+     vue de login avec un serializer personnaliser qui renvoie l'access_token
+     et le refresh_token ainsi que les details sur l'utilisateur (username, email, role, slug)
+    '''
     serializer_class = CustomTokenObtainPairSerializer
     
     
 
 class CustomRefreshView(TokenRefreshView):
+    '''
+        vue pour le refresh_token qui retourne une nouvelle paire de token
+    '''
     serializer_class = CustomTokenRefreshSerializer
 
 

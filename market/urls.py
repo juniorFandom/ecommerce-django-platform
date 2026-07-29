@@ -30,6 +30,7 @@ urlpatterns = [
     path('category/', include('categorie.urls')),
     path('users/',include('users.urls')),
     path('auth/',include('authentication.urls')),
+    path('commande/',include('commande.urls')),
 ]
 
 urlpatterns += [

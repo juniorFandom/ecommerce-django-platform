@@ -30,7 +30,7 @@ class InventorySerializer(serializers.ModelSerializer):
 
     
     def get_is_available(self,obj):
-        return obj.available_quantity
+        return obj.is_available
     
 
 class InventoryCreateSerializer(serializers.ModelSerializer):

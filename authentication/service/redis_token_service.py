@@ -18,6 +18,7 @@ class RedisTokenBlacklistService:
         
         # Verifier si on utilise un cache memoire
         self._is_memory_cache = self._check_if_memory_cache()
+        self.count = 0
         
         if self._is_memory_cache:
             logger.warning("[WARNING] Utilisation du cache memoire (pas de Redis). Les tokens seront perdus au redemarrage.")
@@ -49,7 +50,11 @@ class RedisTokenBlacklistService:
                 return False
             
             key = f"{self.key_prefix}{access_token}"
+
             cache.set(key, 'blacklisted', timeout=ttl_remaining)
+            self.count = self.count + 1
+            logger.info(f"[INFO] Le nombre de token blackliste est:{self.count}")
+
             
             logger.info(f"[OK] Token blackliste pour {ttl_remaining} secondes")
             return True
@@ -78,6 +83,8 @@ class RedisTokenBlacklistService:
         try:
             cache.delete(key)
             logger.info(f"[OK] Token supprime de la blacklist: {access_token[:20]}...")
+            self.count -= self.count
+            logger.info(f"[INFO] Le nombre de token blackliste est:{self.count}")
             return True
         except Exception as e:
             logger.error(f"Erreur lors de la suppression: {e}")
@@ -122,4 +129,30 @@ class RedisTokenBlacklistService:
             logger.error(f"Erreur lors de la recuperation des tokens: {e}")
             return []
     
-    
+    def get_stats(self) -> dict:
+        """
+        Recupere des statistiques sur la blacklist
+        """
+        try:
+            if self._is_memory_cache:
+                return {
+                    'status': 'memory_cache',
+                    'message': 'Utilisation du cache memoire (pas de Redis)',
+                    'total_blacklisted': 'inconnu',
+                    'warning': 'Les tokens sont perdus au redemarrage'
+                }
+            
+            from django_redis import get_redis_connection
+            
+            redis_client = get_redis_connection("default")
+            
+            pattern = f"{self.key_prefix}*"
+            keys = redis_client.keys(pattern)
+            return {
+                'status': 'redis',
+                'total_blacklisted': self.count,
+                'keys': keys,
+            }
+        except Exception as e:
+            logger.error(f"Erreur lors de la recuperation des stats: {e}")
+            return {'error': str(e)}

@@ -22,5 +22,9 @@ class Inventory(models.Model):
    
 
     @property
-    def available_quantity(self):
+    def is_available(self):
         return (self.quantity - self.reserved_quantity)>0
+
+    @property
+    def available_quantite(self):
+        return (self.quantity - self.reserved_quantity)
