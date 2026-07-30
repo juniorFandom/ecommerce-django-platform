@@ -5,9 +5,18 @@ import uuid
 
 class Commande(models.Model):
 
+    STATUS_CHOICES = (
+        ('EN_ATTENTE', 'En attente de paiement'),
+        ('PAYEE', 'Payée'),
+        ('ANNULEE', 'Annulée'),
+        ('REMBOURSEE', 'Remboursée'),
+    )
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
     slug = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     add_date = models.DateTimeField(auto_now=True)
+    statut = models.CharField( max_length=20, choices=STATUS_CHOICES, default='EN_ATTENTE'
+    )
     montant = models.PositiveBigIntegerField(default=0)
 
     

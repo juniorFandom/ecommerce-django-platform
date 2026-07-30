@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'categorie',
     'users',
     'authentication',
-    'commande'
+    'commande',
+    'paiement'
 ]
 
 SIMPLE_JWT = {
@@ -178,6 +179,26 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# recuperation des parametres de l'API pawapay
+
+PAWAPAY_API_TOKEN = config(
+    "PAWAPAY_API_TOKEN"
+)
+
+PAWAPAY_BASE_URL = config(
+    "PAWAPAY_BASE_URL",
+    default="https://api.sandbox.pawapay.io"
+)
+
+PAWAPAY_CURRENCY = config(
+    "PAWAPAY_CURRENCY",
+    default="XAF"
+)
+
+PAWAPAY_COUNTRY = config(
+    "PAWAPAY_COUNTRY",
+    default="CMR"
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

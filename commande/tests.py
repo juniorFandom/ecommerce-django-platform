@@ -152,6 +152,7 @@ class CommandeAPITestCase(APITestCase):
             commande.montant,
             500000
         )
+        self.assertEqual(commande.statut, 'EN_ATTENTE')
 
     def test_create_commande_multiple_lines(self):
 

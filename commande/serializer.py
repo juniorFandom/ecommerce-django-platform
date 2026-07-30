@@ -46,14 +46,16 @@ class CommandeSerializer(serializers.ModelSerializer):
             'user',
             'montant',
             'lignes',
-            'slug'
+            'slug',
+            'statut'
         ]
 
         read_only_fields = [
             'id',
             'user',
             'montant',
-            'slug'
+            'slug',
+            'statut'
         ]
 
 

@@ -31,6 +31,7 @@ urlpatterns = [
     path('users/',include('users.urls')),
     path('auth/',include('authentication.urls')),
     path('commande/',include('commande.urls')),
+    path('paiement/', include('paiement.urls'))
 ]
 
 urlpatterns += [
