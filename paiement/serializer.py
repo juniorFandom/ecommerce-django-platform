@@ -31,3 +31,4 @@ class PaiementSerializer(serializers.ModelSerializer):
         commande = validated_data.pop('commande')
         response = PawaPayService().create_deposit( **validated_data )
         
+        

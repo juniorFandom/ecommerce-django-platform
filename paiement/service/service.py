@@ -19,7 +19,7 @@ class PawaPayService:
 
         '''
             Fonction qui permet d'initier un paiement pawapay 
-            et retourne laa reponse de la requete de paiement
+            et retourne la reponse de la requete de paiement
         '''
 
         url = (

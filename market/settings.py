@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'users',
     'authentication',
     'commande',
-    'paiement'
+    'paiement',
+    'facture'
 ]
 
 SIMPLE_JWT = {
