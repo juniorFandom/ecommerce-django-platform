@@ -1,9 +1,10 @@
 from rest_framework import serializers
-from .service.service import PawaPayService
+from .service import PawaPayService
 from .models import Paiement
 
 
 class PaiementSerializer(serializers.ModelSerializer):
+    phone = serializers.CharField()
 
     class Meta:
 
@@ -16,7 +17,8 @@ class PaiementSerializer(serializers.ModelSerializer):
             "montant",
             "moyen",
             "statut",
-            "created_at"
+            "created_at",
+            'phone'
         ]
 
         read_only_fields = [
@@ -29,6 +31,10 @@ class PaiementSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         commande = validated_data.pop('commande')
-        response = PawaPayService().create_deposit( **validated_data )
+        paiement= PawaPayService()
+        response = paiement.create_deposit( **validated_data )
+
+        if response['status'] == 'ACCEPT':
+            
         
         
