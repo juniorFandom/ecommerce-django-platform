@@ -16,7 +16,7 @@ class CommandeGenericAPIView(GenericAPIView):
     serializer_class = CommandeSerializer
     lookup_field = "slug"
 
-    queryset = Commande.objects.prefetch_related("lignes")
+    queryset = Commande.objects.all()
 
 
 class CreateCommandeAPIView(

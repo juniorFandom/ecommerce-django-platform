@@ -38,6 +38,7 @@ class UserSerializer(serializers.ModelSerializer):
             'is_active',
             'slug',
             'date_joined',
+            'phone',
             'last_login'
         ]
         read_only_fields = [
@@ -54,6 +55,17 @@ class UserSerializer(serializers.ModelSerializer):
         # Vérifier que les mots de passe correspondent
         password = attrs.get('password')
         password_confirm = attrs.get('password_confirm')
+        phone = attrs.get('phone')
+
+        if phone and not str(phone).isdigit():
+            raise serializers.ValidationError({
+                "phone": "Le numéro de téléphone doit être un entier positif."
+            })
+
+        if phone[0] != '6':
+            raise serializers.ValidationError({
+                "phone": "Le numéro de téléphone doit commencer par '6'."
+            })
         
         if password != password_confirm:
             raise serializers.ValidationError({
@@ -121,6 +133,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
             'role',
             'role_display',
             'password',
+            'phone',
             'slug',
             'is_active',
             'is_staff',

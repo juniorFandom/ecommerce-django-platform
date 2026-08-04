@@ -1,6 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
-
+from users.models import User
 from .models import LigneCommande, Commande
 from inventory.models import Inventory
 
@@ -42,21 +42,21 @@ class CommandeSerializer(serializers.ModelSerializer):
         model = Commande
 
         fields = [
-            'id',
-            'user',
-            'montant',
+            # 'id',
+            # 'user',
+            # 'montant',
             'lignes',
-            'slug',
-            'statut'
+            # 'slug',
+            # 'statut'
         ]
 
-        read_only_fields = [
-            'id',
-            'user',
-            'montant',
-            'slug',
-            'statut'
-        ]
+        # read_only_fields = [
+        #     'id',
+        #     'user',
+        #     'montant',
+        #     'slug',
+        #     'statut'
+        # ]
 
 
 
@@ -71,9 +71,10 @@ class CommandeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Impossible de déterminer l'utilisateur."
             )
-
+        user = User.objects.get(id=1)
         commande = Commande.objects.create(
-            user=request.user,
+            # user=request.user,
+            user=user,
             montant=0,
             **validated_data
         )

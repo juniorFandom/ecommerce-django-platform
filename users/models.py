@@ -21,7 +21,8 @@ class User(AbstractUser):
         unique=True
     )
 
-    
+    phone = models.PositiveBigIntegerField(default=655318272)
+
 
     slug = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)  
 

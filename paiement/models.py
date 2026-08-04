@@ -34,6 +34,8 @@ class Paiement(models.Model):
 
     montant = models.PositiveBigIntegerField()
 
+    phone = models.PositiveBigIntegerField(default=655318272)
+
 
     moyen = models.CharField(
         max_length=20,
