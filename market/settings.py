@@ -43,15 +43,15 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
-    'product',
-    'inventory',
-    'mouvement_stock',
-    'categorie',
-    'users',
-    'authentication',
-    'commande',
-    'paiement',
-    'facture'
+    'app.product',
+    'app.inventory',
+    'app.mouvement_stock',
+    'app.categorie',
+    'app.users',
+    'app.authentication',
+    'app.commande',
+    'app.paiement',
+    'app.facture'
 ]
 
 SIMPLE_JWT = {

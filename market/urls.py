@@ -24,15 +24,15 @@ from drf_spectacular.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('product/', include('product.urls')),
-    path('inventory/', include('inventory.urls')),
-    path('mouvement_stock/', include('mouvement_stock.urls')),
-    path('category/', include('categorie.urls')),
-    path('users/',include('users.urls')),
-    path('auth/',include('authentication.urls')),
-    path('commande/',include('commande.urls')),
-    path('paiement/', include('paiement.urls')),
-    path('facture/', include('facture.urls')),
+    path('product/', include('app.product.urls')),
+    path('inventory/', include('app.inventory.urls')),
+    path('mouvement_stock/', include('app.mouvement_stock.urls')),
+    path('category/', include('app.categorie.urls')),
+    path('users/',include('app.users.urls')),
+    path('auth/',include('app.authentication.urls')),
+    path('commande/',include('app.commande.urls')),
+    path('paiement/', include('app.paiement.urls')),
+    path('facture/', include('app.facture.urls')),
 
 ]
 
