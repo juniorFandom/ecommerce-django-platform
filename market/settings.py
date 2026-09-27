@@ -43,12 +43,12 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
+    'app.authentication',
     'app.product',
     'app.inventory',
     'app.mouvement_stock',
     'app.categorie',
     'app.users',
-    'app.authentication',
     'app.commande',
     'app.paiement',
     'app.facture'
@@ -84,7 +84,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'authentication.middleware.AccessTokenBlacklistMiddleware'
+    'app.authentication.middleware.AccessTokenBlacklistMiddleware'
 ]
 
 ROOT_URLCONF = 'market.urls'
