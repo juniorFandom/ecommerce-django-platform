@@ -25,10 +25,6 @@ class LigneCommandeSerializer(serializers.ModelSerializer):
         ]
 
 
-
-
-
-
 class CommandeSerializer(serializers.ModelSerializer):
 
     lignes = LigneCommandeSerializer(
@@ -57,7 +53,6 @@ class CommandeSerializer(serializers.ModelSerializer):
         #     'slug',
         #     'statut'
         # ]
-
 
 
     @transaction.atomic

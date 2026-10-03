@@ -45,5 +45,5 @@ class InventoryCreateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        print(f'dans la methode de validation de l\inventory {validated_data}')
+        print(f'dans la methode de validation de l\'inventory {validated_data}')
         return create_inventory(**validated_data)

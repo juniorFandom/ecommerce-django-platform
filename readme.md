@@ -153,6 +153,9 @@ Vérification de la disponibilité du stock
 Réservation du stock
     │
     ▼
+Rabbitmq
+    │
+    ▼
 Paiement
     │
     ├──────────────► Échec du paiement
@@ -417,7 +420,7 @@ Le projet est actuellement en cours de développement.
 [x] Gestion des catégories
 [x] Gestion de l'inventaire
 [x] Gestion des mouvements de stock
-[ ] Authentification des utilisateurs
+[x] Authentification des utilisateurs
 [ ] Gestion des rôles et permissions
 [ ] Gestion des commandes
 [ ] Gestion du panier

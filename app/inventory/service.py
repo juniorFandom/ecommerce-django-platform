@@ -35,7 +35,5 @@ def create_inventory(**validated_data):
             quantity=inventory.quantity,
             motif='Stock initial'
         )
-
-
-    
+   
     return inventory

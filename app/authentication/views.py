@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView  
 import logging
+# from django.views.decorator.csrf import ensure_csrf_cookie
 
 logger = logging.getLogger(__name__)
 

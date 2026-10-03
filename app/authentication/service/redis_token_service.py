@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class RedisTokenBlacklistService:
     """
     Service pour gerer la blacklist des access tokens via Redis
-    Utilise le systeme de cache Django (django-redis)
+    Utiliser le systeme de cache Django (django-redis)
     """
     
     def __init__(self):
