@@ -3,6 +3,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import (CreateModelMixin, ListModelMixin, UpdateModelMixin, DestroyModelMixin, RetrieveModelMixin)
 from app.inventory.serializer import InventorySerializer, InventoryCreateSerializer
 from .models import Inventory
+from rest_framework.permissions  import IsAuthenticated
 
 class InventoryGenericAPIView(GenericAPIView):
     queryset = Inventory.objects.select_related('product')

@@ -7,6 +7,7 @@ from rest_framework.mixins import (
     UpdateModelMixin,
     DestroyModelMixin
 )
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Commande, LigneCommande
 from .serializer import CommandeSerializer
@@ -15,6 +16,7 @@ from .serializer import CommandeSerializer
 class CommandeGenericAPIView(GenericAPIView):
     serializer_class = CommandeSerializer
     lookup_field = "slug"
+    permission_classes = [IsAuthenticated]
 
     queryset = Commande.objects.all()
 

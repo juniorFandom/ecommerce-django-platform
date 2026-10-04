@@ -394,12 +394,13 @@ Le projet est actuellement en cours de développement.
 * [x] Gestion de l'inventaire
 * [x] Gestion des mouvements de stock
 * [x] Mise en place du modèle utilisateur personnalisé
+* [x] Authentification des utilisateurs
+* [x] Authentification JWT
+* [x] Gestion des rôles et permissions
+* [x] Mise en place du pipeline CI/CD
 
 ### Fonctionnalités en cours / à venir
 
-* [ ] Authentification des utilisateurs
-* [ ] Authentification JWT
-* [ ] Gestion des rôles et permissions
 * [ ] Gestion des commandes
 * [ ] Gestion du panier
 * [ ] Réservation du stock
@@ -407,9 +408,7 @@ Le projet est actuellement en cours de développement.
 * [ ] Gestion des webhooks de paiement
 * [ ] Système de notifications
 * [ ] Tests automatisés
-* [ ] Mise en place du pipeline CI/CD
 * [ ] Conteneurisation avec Docker
-* [ ] Déploiement en production
 
 ---
 
@@ -421,15 +420,15 @@ Le projet est actuellement en cours de développement.
 [x] Gestion de l'inventaire
 [x] Gestion des mouvements de stock
 [x] Authentification des utilisateurs
-[ ] Gestion des rôles et permissions
-[ ] Gestion des commandes
-[ ] Gestion du panier
-[ ] Réservation du stock
+[x] Gestion des rôles et permissions
+[x] Gestion des commandes
+[x] Gestion du panier
+[x] Réservation du stock
+[x] CI/CD
+[x] Conteneurisation Docker
+[x] Tests automatisés
 [ ] Intégration des paiements
 [ ] Système de notifications
-[ ] Tests automatisés
-[ ] CI/CD
-[ ] Conteneurisation Docker
 [ ] Déploiement en production
 ```
 

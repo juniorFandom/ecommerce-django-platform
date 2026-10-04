@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, DestroyModelMixin, ListModelMixin
 from rest_framework.generics import GenericAPIView
+from rest_framework.permissions import IsAuthenticated
 from .models import Category
 from .serializer import CategorySerializer, CategoryDetailSerializer
 
@@ -8,6 +9,7 @@ class CategoryGenericAPIView(GenericAPIView):
     lookup_field = 'slug'
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes =[IsAuthenticated]
 
 
 class CategoryCreateAPIView(CategoryGenericAPIView, CreateModelMixin):

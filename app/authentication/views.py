@@ -65,7 +65,7 @@ class CustomTokenObtainPairView( TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         res = super().post(request, *args, **kwargs)
         data = res.data
-        print(data)
+        # print(data)
         # On ne renvoie QUE l'access dans le body (le refresh reste secret)
         response = Response(
             {
