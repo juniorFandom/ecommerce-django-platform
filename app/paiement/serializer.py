@@ -10,6 +10,8 @@ class PaiementSerializer(serializers.ModelSerializer):
         write_only=True
     )
 
+    provider = serializers.CharField(write_only=True)
+
     class Meta:
 
         model = Paiement
@@ -23,6 +25,7 @@ class PaiementSerializer(serializers.ModelSerializer):
             # "statut",
             # "created_at",
             "phone",
+            "provider"
         ]
 
         # read_only_fields = [
@@ -76,6 +79,8 @@ class PaiementSerializer(serializers.ModelSerializer):
             "phone"
         )
 
+        provider = validated_data.pop("provider")
+
         paiement = Paiement.objects.create(
 
             commande=commande,
@@ -101,6 +106,8 @@ class PaiementSerializer(serializers.ModelSerializer):
                 amount=paiement.montant,
 
                 phone=phone,
+
+                provider=provider,
 
             )
 

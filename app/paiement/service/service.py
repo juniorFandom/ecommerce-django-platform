@@ -22,9 +22,7 @@ class PawaPayService:
             et retourne la reponse de la requete de paiement
         '''
 
-        url = (
-            f"{self.base_url}/v2/deposits"
-        )
+        url = f"{self.base_url}/v2/deposits"
 
 
         payload = {
