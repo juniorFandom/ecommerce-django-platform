@@ -3,6 +3,7 @@ from .serializers import (
 )
 from rest_framework_simplejwt.views import TokenBlacklistView, TokenRefreshView, TokenObtainPairView
 from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from .service.redis_token_service import RedisTokenBlacklistService
 from rest_framework import status
@@ -60,6 +61,42 @@ class CustomTokenObtainPairView( TokenObtainPairView):
      et le refresh_token ainsi que les details sur l'utilisateur (username, email, role, slug)
     '''
     serializer_class = CustomTokenObtainPairSerializer
+
+    def post(self, request, *args, **kwargs):
+        res = super().post(request, *args, **kwargs)
+        data = res.data
+        print(data)
+        # On ne renvoie QUE l'access dans le body (le refresh reste secret)
+        response = Response(
+            {
+                'access': data['access'],
+                'user': data['user'],
+                'message': 'connectee',
+            },
+            status=res.status_code,
+        )
+
+        # Access token en cookie HttpOnly (optionnel)
+        response.set_cookie(
+            key='access',
+            value=data['access'],
+            httponly=True,
+            secure=False,      
+            samesite='Lax',
+            max_age=300,     
+        )
+
+        # Refresh token en cookie HttpOnly (le seul endroit où il doit être)
+        response.set_cookie(
+            key='refresh',
+            value=data['refresh'],
+            httponly=True,
+            secure=False,
+            samesite='Lax',
+            max_age=7 * 24 * 3600, 
+        )
+
+        return response
     
     
 
