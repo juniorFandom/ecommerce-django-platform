@@ -10,7 +10,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView  
 import logging
-# from django.views.decorator.csrf import ensure_csrf_cookie
+from core.utils.throttle import LoginThrottle
+from market.settings import SSL_STATUS
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,7 @@ class CustomTokenBlacklistView(TokenBlacklistView):
     - Suppression des cookies (si présents)
     """
     permission_classes = [IsAuthenticated]
+    throttle_classes= [LoginThrottle]
     
     def post(self, request, *args, **kwargs):
         print("dans la methode de logout token ")
@@ -61,6 +63,8 @@ class CustomTokenObtainPairView( TokenObtainPairView):
      et le refresh_token ainsi que les details sur l'utilisateur (username, email, role, slug)
     '''
     serializer_class = CustomTokenObtainPairSerializer
+    throttle_classes= [LoginThrottle]  # pour limiter le nombre de requete a 5/minute 
+
 
     def post(self, request, *args, **kwargs):
         res = super().post(request, *args, **kwargs)
@@ -81,7 +85,7 @@ class CustomTokenObtainPairView( TokenObtainPairView):
             key='access',
             value=data['access'],
             httponly=True,
-            secure=False,      
+            secure=SSL_STATUS,      
             samesite='Lax',
             max_age=300,     
         )
@@ -91,7 +95,7 @@ class CustomTokenObtainPairView( TokenObtainPairView):
             key='refresh',
             value=data['refresh'],
             httponly=True,
-            secure=False,
+            secure=SSL_STATUS,
             samesite='Lax',
             max_age=7 * 24 * 3600, 
         )

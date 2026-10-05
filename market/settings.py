@@ -75,6 +75,13 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+
+    'DEFAULT_THROTTLE_RATES': {
+        'login':'5/minutes',
+        'register':'3/hour',
+        'anon':'100/day',
+        'user':'1000/day'
+    }
 }
 
 # CORS_ALLOWED_ALL_ORIGINS = True
@@ -99,6 +106,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'market.urls'
+
+SSL_STATUS = False # configuration du ssh cote cookies du navigateur
 
 TEMPLATES = [
     {
