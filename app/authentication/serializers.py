@@ -4,6 +4,7 @@ from rest_framework_simplejwt.serializers import (
     TokenRefreshSerializer
 )
 from app.users.models import User
+from rest_framework import serializers
 
 
 class CustomTokenObtainPairSerializer(
@@ -56,3 +57,8 @@ class CustomTokenRefreshSerializer(
 
         return data
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'role']
+        read_only_fields = fields

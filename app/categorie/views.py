@@ -2,6 +2,7 @@ from django.shortcuts import render
 from rest_framework.mixins import CreateModelMixin, UpdateModelMixin, RetrieveModelMixin, DestroyModelMixin, ListModelMixin
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated
+from core.utils.throttle import LoginThrottle
 from .models import Category
 from .serializer import CategorySerializer, CategoryDetailSerializer
 
@@ -10,6 +11,7 @@ class CategoryGenericAPIView(GenericAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes =[IsAuthenticated]
+    throttle_classes = [LoginThrottle]
 
 
 class CategoryCreateAPIView(CategoryGenericAPIView, CreateModelMixin):

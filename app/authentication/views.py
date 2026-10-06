@@ -1,5 +1,5 @@
 from .serializers import (
-    CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer
+    CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer, UserSerializer
 )
 from rest_framework_simplejwt.views import TokenBlacklistView, TokenRefreshView, TokenObtainPairView
 from rest_framework_simplejwt.exceptions import TokenError
@@ -10,7 +10,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView  
 import logging
-from core.utils.throttle import LoginThrottle
+from core.utils.throttle import LoginThrottle # module python qui permet la mise en place du rate limite
 from market.settings import SSL_STATUS
 
 logger = logging.getLogger(__name__)
@@ -63,14 +63,12 @@ class CustomTokenObtainPairView( TokenObtainPairView):
      et le refresh_token ainsi que les details sur l'utilisateur (username, email, role, slug)
     '''
     serializer_class = CustomTokenObtainPairSerializer
-    throttle_classes= [LoginThrottle]  # pour limiter le nombre de requete a 5/minute 
+    throttle_classes= [LoginThrottle]  # pour limiter le nombre de requete a 5requetes/minute 
 
 
     def post(self, request, *args, **kwargs):
         res = super().post(request, *args, **kwargs)
         data = res.data
-        # print(data)
-        # On ne renvoie QUE l'access dans le body (le refresh reste secret)
         response = Response(
             {
                 'access': data['access'],
@@ -80,15 +78,15 @@ class CustomTokenObtainPairView( TokenObtainPairView):
             status=res.status_code,
         )
 
-        # Access token en cookie HttpOnly (optionnel)
-        response.set_cookie(
-            key='access',
-            value=data['access'],
-            httponly=True,
-            secure=SSL_STATUS,      
-            samesite='Lax',
-            max_age=300,     
-        )
+        # # Access token en cookie HttpOnly (optionnel)
+        # response.set_cookie(
+        #     key='access',
+        #     value=data['access'],
+        #     httponly=True,
+        #     secure=SSL_STATUS,      
+        #     samesite='Lax',
+        #     max_age=300,     
+        # )
 
         # Refresh token en cookie HttpOnly (le seul endroit où il doit être)
         response.set_cookie(
@@ -111,12 +109,11 @@ class CustomRefreshView(TokenRefreshView):
     serializer_class = CustomTokenRefreshSerializer
 
 
-# Créer une vue protégée pour les tests
-class ProtectedView(APIView):
+
+class userVerify(APIView):
     permission_classes = [IsAuthenticated]
-    
+    serializer_class = [UserSerializer]
+
     def get(self, request):
-        return Response({'message': 'Protected content'})
-    
-    def post(self, request):
-        return Response({'message': 'Protected content'})
+        return Response(UserSerializer(request.user).data)
+        

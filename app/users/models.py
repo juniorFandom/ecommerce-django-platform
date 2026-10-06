@@ -29,5 +29,5 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-    def check_user_active(self):
+    def check_user_active(self)->bool:
         return self.is_active
