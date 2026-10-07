@@ -12,6 +12,7 @@ from rest_framework.views import APIView
 import logging
 from core.utils.throttle import LoginThrottle # module python qui permet la mise en place du rate limite
 from market.settings import SSL_STATUS
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
 logger = logging.getLogger(__name__)
 
@@ -78,16 +79,6 @@ class CustomTokenObtainPairView( TokenObtainPairView):
             status=res.status_code,
         )
 
-        # # Access token en cookie HttpOnly (optionnel)
-        # response.set_cookie(
-        #     key='access',
-        #     value=data['access'],
-        #     httponly=True,
-        #     secure=SSL_STATUS,      
-        #     samesite='Lax',
-        #     max_age=300,     
-        # )
-
         # Refresh token en cookie HttpOnly (le seul endroit où il doit être)
         response.set_cookie(
             key='refresh',
@@ -95,7 +86,8 @@ class CustomTokenObtainPairView( TokenObtainPairView):
             httponly=True,
             secure=SSL_STATUS,
             samesite='Lax',
-            max_age=7 * 24 * 3600, 
+            max_age=7 * 24 * 3600,
+            path='/' 
         )
 
         return response
@@ -107,6 +99,41 @@ class CustomRefreshView(TokenRefreshView):
         vue pour le refresh_token qui retourne une nouvelle paire de token
     '''
     serializer_class = CustomTokenRefreshSerializer
+
+    def post(self, request, *args, **kwargs):
+        # 1. Récupérer le refresh token depuis le cookie
+        refresh_token = request.COOKIES.get('refresh')
+
+        if not refresh_token:
+            return Response(
+                {"detail": "Refresh token manquant dans le cookie"},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+
+        # 2. Injecter dans le serializer (comme si c'était dans le body)
+        serializer = self.get_serializer(data={'refresh': refresh_token})
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        # 3. Renvoyer le nouvel access token (et optionnellement refresh le cookie)
+        response = Response(serializer.validated_data, status=status.HTTP_200_OK)
+        
+        # Optionnel : rotation du refresh token (si ROTATE_REFRESH_TOKENS = True)
+        if 'refresh' in serializer.validated_data:
+            response.set_cookie(
+                key='refresh',
+                value=serializer.validated_data['refresh'],
+                httponly=True,
+                secure=False,        # True en prod HTTPS
+                samesite='Lax',
+                max_age=7 * 24 * 3600,
+                path='/',
+            )
+        
+        return response
 
 
 
